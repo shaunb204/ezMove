@@ -24,19 +24,12 @@ class Item(object):
         self.post_skid = skid.upper()
         self.is_moved = False
         self.info_html = self.s.get(urls['info']+self.item).text.split('<br>')
-        self.is_tbr = self._is_tbr()
+        self.is_tbr = (find_str('TBR:', self.info_html)[0] and
+                       find_str('HSCR', self.info_html)[0])
         self._get_info()
 
     def __len__(self):
         return int(find_str('rcvd:', self.info_html)[0].split()[1].strip(','))
-
-    def _is_tbr(self):
-        try:
-            if find_str('TBR:', self.info_html)[0] and \
-                    find_str('HSCR', self.info_html)[0]:
-                return True
-        except IndexError:
-            return False
 
     def _is_moved(self):
         try:
